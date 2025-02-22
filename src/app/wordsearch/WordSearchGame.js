@@ -29,11 +29,12 @@ export default function WordSearchGame({ grid, words, positions }) {
     } else {
       const [firstCell] = selectedCells
       if (row === firstCell[0] || col === firstCell[1]) {
-        const word = positions.find(pos => 
+        const word = words.find(pos =>
           (pos.start[0] === firstCell[0] && pos.start[1] === firstCell[1] &&
-           pos.end[0] === row && pos.end[1] === col) ||
+            pos.end[0] === row && pos.end[1] === col) ||
           (pos.end[0] === firstCell[0] && pos.end[1] === firstCell[1] &&
-           pos.start[0] === row && pos.start[1] === col)
+            pos.start[0] === row && pos.start[1] === col)
+        )
         if (word && !foundWords.includes(word.word)) {
           setFoundWords([...foundWords, word.word])
           setSelectedCells([]) // Clear selection after finding word

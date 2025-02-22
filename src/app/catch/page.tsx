@@ -115,11 +115,11 @@ export default function Catch() {
         const canvas = canvasRef.current
         if (!canvas) return prev
 
-        let newX = prev.x + prev.dx * deltaTime
-        let newY = prev.y + prev.dy * deltaTime
+        const newX = prev.x + prev.dx * deltaTime
+        const newY = prev.y + prev.dy * deltaTime
         let newDx = prev.dx
         let newDy = prev.dy
-        let newRotation = prev.rotation + 5 * deltaTime
+        const newRotation = prev.rotation + 5 * deltaTime
 
         // Wall collisions
         if (newX <= 0 || newX >= canvas.clientWidth - BALL_SIZE) {

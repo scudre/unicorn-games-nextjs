@@ -33,20 +33,20 @@ export default function Rain() {
     setTimeLeft(GAME_DURATION)
   }
 
-  const addSticker = () => {
-    const newSticker = {
-      id: Math.random().toString(),
-      x: Math.random() * (window.innerWidth - 50),
-      y: -50,
-      speed: 2 + Math.random() * (2 + score/20), // Speed increases with score
-      rotation: Math.random() * 360,
-      sticker: STICKER_OPTIONS[Math.floor(Math.random() * STICKER_OPTIONS.length)]
-    }
-    setStickers(prev => [...prev, newSticker])
-  }
-
   useEffect(() => {
     if (gameOver) return
+
+    const addSticker = () => {
+      const newSticker = {
+        id: Math.random().toString(),
+        x: Math.random() * (window.innerWidth - 50),
+        y: -50,
+        speed: 2 + Math.random() * (2 + score/20),
+        rotation: Math.random() * 360,
+        sticker: STICKER_OPTIONS[Math.floor(Math.random() * STICKER_OPTIONS.length)]
+      }
+      setStickers(prev => [...prev, newSticker])
+    }
 
     const timer = setInterval(() => {
       setTimeLeft(prev => {
@@ -76,7 +76,7 @@ export default function Rain() {
       clearInterval(spawnInterval)
       clearInterval(gameLoop)
     }
-  }, [gameOver])
+  }, [gameOver, score])
 
   const handleClick = (stickerId: string) => {
     setScore(prev => prev + 1)
@@ -93,7 +93,7 @@ export default function Rain() {
       {gameOver ? (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg text-center">
-            <h2 className="text-2xl font-bold mb-4">Time's Up!</h2>
+            <h2 className="text-2xl font-bold mb-4">Time&apos;s Up!</h2>
             <p className="mb-4">Final Score: {score}</p>
             <button
               className="bg-purple-500 text-white px-6 py-2 rounded-lg hover:bg-purple-600"

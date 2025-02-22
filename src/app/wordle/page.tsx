@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 
 // These are the only possible target words
 const UNICORN_WORDS = [

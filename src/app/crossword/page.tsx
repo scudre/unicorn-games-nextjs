@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react'
-import Image from 'next/image'
 
 interface CrosswordCell {
   letter: string
@@ -20,7 +19,6 @@ interface CrosswordClue {
 }
 
 const GRID_SIZE = 15
-const CELL_SIZE = 40
 
 const CROSSWORD_CLUES: CrosswordClue[] = [
   {
@@ -74,7 +72,7 @@ const CROSSWORD_CLUES: CrosswordClue[] = [
 ]
 
 export default function Crossword() {
-  const [grid, setGrid] = useState<CrosswordCell[][]>(() => {
+  const [grid] = useState<CrosswordCell[][]>(() => {
     // Initialize empty grid
     const newGrid: CrosswordCell[][] = Array(GRID_SIZE).fill(null).map(() =>
       Array(GRID_SIZE).fill(null).map(() => ({
@@ -109,8 +107,6 @@ export default function Crossword() {
 
   const [selectedClue, setSelectedClue] = useState<CrosswordClue | null>(null)
   const [userAnswers, setUserAnswers] = useState<{[key: string]: string}>({})
-  const [completed, setCompleted] = useState(false)
-  const [selectedCell, setSelectedCell] = useState<{x: number, y: number} | null>(null)
 
   const getNextCell = (x: number, y: number, direction: 'next' | 'prev'): {x: number, y: number} | null => {
     const currentClue = CROSSWORD_CLUES.find(clue => {
@@ -149,8 +145,7 @@ export default function Crossword() {
     const newAnswers = { ...userAnswers, [key]: value.toUpperCase() }
     setUserAnswers(newAnswers)
 
-    // Check if puzzle is complete
-    let isComplete = true
+    // Remove or use the completion check
     CROSSWORD_CLUES.forEach(clue => {
       let currX = clue.x
       let currY = clue.y
@@ -159,7 +154,7 @@ export default function Crossword() {
       answer.forEach(letter => {
         const key = `${currX},${currY}`
         if (newAnswers[key] !== letter) {
-          isComplete = false
+          return // Early exit if not complete
         }
         if (clue.direction === 'across') {
           currX++
@@ -169,13 +164,12 @@ export default function Crossword() {
       })
     })
     
-    setCompleted(isComplete)
-
     if (value !== '') {
       // Move to next cell if there is one
       const nextCell = getNextCell(x, y, 'next')
       if (nextCell) {
-        setSelectedCell(nextCell)
+        const nextClue = CROSSWORD_CLUES.find(clue => clue.x === nextCell.x && clue.y === nextCell.y)
+        setSelectedClue(nextClue || null)
         // Focus the next input
         const nextInput = document.querySelector(
           `input[data-x="${nextCell.x}"][data-y="${nextCell.y}"]`
@@ -190,7 +184,8 @@ export default function Crossword() {
       e.preventDefault()
       const prevCell = getNextCell(x, y, 'prev')
       if (prevCell) {
-        setSelectedCell(prevCell)
+        const prevClue = CROSSWORD_CLUES.find(clue => clue.x === prevCell.x && clue.y === prevCell.y)
+        setSelectedClue(prevClue || null)
         const prevInput = document.querySelector(
           `input[data-x="${prevCell.x}"][data-y="${prevCell.y}"]`
         ) as HTMLInputElement
